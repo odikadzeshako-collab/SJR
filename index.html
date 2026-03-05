@@ -1,0 +1,2737 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>SJR</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+<style>
+:root {
+--bg: linear-gradient(135deg, #2a0000, #000000);
+--card: rgba(15, 20, 45, 0.88);
+--text: #e0e7ff;
+--border: #4a0d0d;
+--accent: #3b82f6;
+--glow: 0 0 14px rgba(250, 82, 82, 0.55);
+--danger: #ef4444;
+--neon-red: #ff0033;
+--neon-glow: 0 0 20px #ff0033, 0 0 40px #ff0033, 0 0 60px #ff0033, 0 0 80px #ff3366;
+}
+
+.light {
+--bg: linear-gradient(135deg, #ffe0e0, #fff0f0);
+--card: rgba(255,255,255,0.94);
+--text: #0f172a;
+--border: #fa5252;
+--accent: #2563eb;
+--glow: 0 0 14px rgba(250,82,82,0.45);
+}
+textarea {
+  max-width: 575px;
+}
+body {
+margin: 0;
+font-family: 'Orbitron', sans-serif;
+background: var(--bg);
+color: var(--text);
+min-height: 100vh;
+background-attachment: fixed;
+overflow-x: hidden;
+position: relative;
+}
+
+body::before {
+content: "";
+position: fixed;
+inset: 0;
+background:
+radial-gradient(circle at 10% 15%, white 1px, transparent 1px),
+radial-gradient(circle at 30% 40%, white 1px, transparent 1px),
+radial-gradient(circle at 55% 65%, white 1px, transparent 1px),
+radial-gradient(circle at 75% 25%, white 1px, transparent 1px),
+radial-gradient(circle at 20% 85%, white 1px, transparent 1px),
+radial-gradient(circle at 85% 75%, white 1px, transparent 1px);
+background-size: 70px 70px, 90px 90px, 110px 110px, 80px 80px, 100px 100px, 120px 120px;
+opacity: 0.07;
+pointer-events: none;
+animation: twinkle 22s infinite alternate ease-in-out;
+z-index: -2;
+}
+
+@keyframes twinkle {
+0%, 100% { opacity: 0.05; }
+50% { opacity: 0.13; }
+}
+
+header {
+display: flex;
+justify-content: space-between;
+align-items: center;
+padding: 14px 24px;
+background: rgba(15,20,45,0.75);
+backdrop-filter: blur(10px);
+border-bottom: 1px solid var(--border);
+position: sticky;
+top: 0;
+z-index: 100;
+flex-wrap: wrap;
+gap: 12px;
+}
+
+.logo {
+font-size: 28px;
+font-weight: 900;
+color: #fa5252;
+letter-spacing: -1px;
+cursor: pointer;
+text-shadow: 0 0 8px rgba(250, 82, 82, 0.5);
+}
+
+nav {
+display: flex;
+gap: 12px;
+flex-wrap: wrap;
+}
+
+nav button,
+button.main {
+background: none;
+border: 1px solid var(--border);
+color: var(--text);
+padding: 8px 16px;
+border-radius: 12px;
+cursor: pointer;
+font-weight: 700;
+font-size: 14px;
+transition: all 0.28s ease;
+position: relative;
+}
+
+nav button:hover,
+button.main:hover {
+transform: scale(1.06);
+box-shadow: var(--glow);
+background: var(--accent);
+border-color: var(--accent);
+color: white;
+}
+
+.notification-badge {
+position: absolute;
+top: -6px;
+right: -6px;
+background: #ef4444;
+color: white;
+font-size: 11px;
+font-weight: bold;
+border-radius: 50%;
+padding: 2px 6px;
+min-width: 16px;
+text-align: center;
+}
+
+.search-bar {
+flex: 1;
+min-width: 160px;
+max-width: 280px;
+position: relative;
+}
+
+#searchInput {
+width: 100%;
+padding: 11px 16px;
+border-radius: 999px;
+border: 1px solid var(--border);
+background: rgba(30,40,70,0.65);
+color: var(--text);
+font-size: 15px;
+transition: all 0.3s;
+}
+
+#searchInput:focus {
+outline: none;
+border-color: var(--accent);
+box-shadow: var(--glow);
+background: rgba(30,40,70,0.9);
+}
+
+#searchResults {
+position: absolute;
+top: 100%;
+left: 0;
+width: 100%;
+background: var(--card);
+border: 1px solid var(--border);
+border-radius: 14px;
+max-height: 260px;
+overflow-y: auto;
+z-index: 20;
+backdrop-filter: blur(8px);
+display: none;
+box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+}
+
+.search-result {
+padding: 12px 18px;
+display: flex;
+align-items: center;
+gap: 14px;
+cursor: pointer;
+transition: background 0.2s;
+}
+
+.search-result:hover {
+background: rgba(59,130,246,0.18);
+}
+
+.container {
+max-width: 640px;
+margin: 0 auto;
+padding: 24px 16px;
+}
+
+.card {
+  background: var(--card);
+border: 1px solid var(--border);
+border-radius: 18px;
+padding: 16px;
+margin-bottom: 20px;
+backdrop-filter: blur(8px);
+transition: all 0.3s ease;
+}
+
+.card:hover {
+box-shadow: var(--glow);
+transform: translateY(-2px);
+}
+
+input, textarea {
+width: 92.5%;
+padding: 10px 14px;
+border-radius: 12px;
+border: 1px solid var(--border);
+background: rgba(10,15,40,0.65);
+color: var(--text);
+margin: 6px 0;
+font-size: 15px;
+resize: vertical;
+font-family: inherit;
+}
+
+.light input, .light textarea {
+background: rgba(255,255,255,0.85);
+color: #0f172a;
+}
+
+.composer-actions {
+display: flex;
+justify-content: space-between;
+align-items: center;
+margin-top: 8px;
+gap: 12px;
+flex-wrap: wrap;
+}
+
+.file-label {
+padding: 8px 14px;
+border: 1px solid var(--border);
+border-radius: 10px;
+cursor: pointer;
+font-size: 14px;
+background: rgba(30,40,70,0.4);
+transition: all 0.2s;
+}
+
+.file-label:hover {
+background: rgba(59,130,246,0.15);
+border-color: var(--accent);
+}
+
+#charCount {
+font-size: 13px;
+opacity: 0.7;
+text-align: right;
+}
+
+#preview img {
+max-width: 100%;
+border-radius: 14px;
+margin-top: 10px;
+}
+
+.post-header {
+display: flex;
+align-items: center;
+gap: 12px;
+margin-bottom: 10px;
+}
+
+.pfp {
+width: 44px;
+height: 44px;
+border-radius: 50%;
+object-fit: cover;
+cursor: pointer;
+border: 2px solid var(--border);
+}
+
+.verify {
+width: 18px;
+height: 18px;
+vertical-align: middle;
+}
+
+.admin-verify {
+height: 24px !important;
+vertical-align: middle;
+}
+
+.username {
+font-weight: 800;
+font-size: 17px;
+cursor: pointer;
+}
+
+.shared-from {
+font-size: 13.5px;
+opacity: 0.75;
+margin: 4px 0 8px;
+color: var(--accent);
+}
+
+.time {
+margin-left: auto;
+font-size: 13px;
+opacity: 0.65;
+}
+
+.delete {
+cursor: pointer;
+color: #ff6b6b;
+font-weight: bold;
+font-size: 18px;
+}
+
+.post-content {
+margin: 10px 0;
+font-size: 15.5px;
+line-height: 1.5;
+}
+
+.post-image-wrapper {
+width: 100%;
+aspect-ratio: 864 / 1080;
+overflow: hidden;
+border-radius: 14px;
+margin-top: 12px;
+position: relative;
+}
+
+.post-image-wrapper img {
+width: 100%;
+height: 100%;
+object-fit: cover;
+display: block;
+position: absolute;
+top: 0;
+left: 0;
+}
+
+.actions {
+margin-top: 12px;
+display: flex;
+gap: 24px;
+font-size: 15px;
+}
+
+.actions button {
+background: none;
+border: none;
+color: var(--text);
+cursor: pointer;
+transition: color 0.25s, transform 0.2s;
+}
+
+.actions button:hover {
+color: var(--accent);
+transform: scale(1.1);
+}
+
+.liked {
+color: #ff3366 !important;
+}
+
+.profile {
+text-align: center;
+padding: 28px 16px;
+}
+
+.profile-big {
+width: 168px;
+height: 168px;
+border-radius: 50%;
+object-fit: cover;
+border: 4px solid var(--border);
+margin-bottom: 16px;
+}
+
+.profile-links {
+margin: 16px 0;
+display: flex;
+justify-content: center;
+gap: 16px;
+flex-wrap: wrap;
+}
+
+.profile-link {
+width: 32px;
+height: 32px;
+border-radius: 8px;
+overflow: hidden;
+border: 1px solid var(--border);
+transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.profile-link:hover {
+transform: scale(1.15);
+box-shadow: var(--glow);
+}
+
+.profile-link img {
+width: 100%;
+height: 100%;
+object-fit: cover;
+}
+
+.private-notice {
+margin: 80px auto 40px;
+text-align: center;
+font-size: 18px;
+opacity: 0.85;
+max-width: 420px;
+}
+
+.lock-icon {
+font-size: 90px;
+margin-bottom: 24px;
+display: block;
+}
+
+.stats {
+display: flex;
+justify-content: center;
+gap: 48px;
+margin: 24px 0;
+font-weight: 700;
+font-size: 15px;
+}
+
+.stats div {
+cursor: pointer;
+}
+
+.stats div:hover {
+color: var(--accent);
+}
+
+.follow-btn,
+.message-btn,
+.request-btn,
+.requested-btn {
+padding: 10px 22px;
+border-radius: 12px;
+font-weight: 700;
+cursor: pointer;
+transition: all 0.28s;
+border: none;
+color: white;
+}
+
+.follow-btn {
+background: var(--accent);
+}
+
+.follow-btn:hover {
+box-shadow: var(--glow);
+transform: scale(1.05);
+}
+
+.unfollow {
+background: #ef4444;
+}
+
+.message-btn {
+background: #10b981;
+margin-left: 14px;
+}
+
+.requested-btn {
+background: #6b7280;
+cursor: default;
+}
+
+#chatHistory {
+max-height: 360px;
+overflow-y: auto;
+margin-bottom: 14px;
+padding: 14px;
+background: rgba(0,0,0,0.35);
+border-radius: 14px;
+}
+
+.chat-message {
+padding: 10px 16px;
+border-radius: 14px;
+margin-bottom: 12px;
+max-width: 82%;
+font-size: 14.5px;
+word-break: break-word;
+}
+
+.chat-message.sent {
+background: var(--accent);
+margin-left: auto;
+color: white;
+}
+
+.chat-message.received {
+background: rgba(59,130,246,0.22);
+}
+
+.setting {
+display: flex;
+justify-content: space-between;
+align-items: center;
+padding: 14px 0;
+border-bottom: 1px solid var(--border);
+}
+
+.toggle {
+width: 50px;
+height: 26px;
+background: #4b5563;
+border-radius: 26px;
+position: relative;
+cursor: pointer;
+}
+
+.toggle::after {
+content: "";
+position: absolute;
+top: 4px;
+left: 4px;
+width: 18px;
+height: 18px;
+background: white;
+border-radius: 50%;
+transition: 0.28s;
+}
+
+.toggle.active {
+background: var(--accent);
+}
+
+.toggle.active::after {
+left: 28px;
+}
+
+.hidden {
+display: none !important;
+}
+
+.comment {
+font-size: 14px;
+opacity: 0.85;
+margin-top: 6px;
+padding-left: 8px;
+}
+
+.request-item, .notification-item {
+display: flex;
+align-items: center;
+justify-content: space-between;
+padding: 12px 0;
+border-bottom: 1px solid var(--border);
+cursor: pointer;
+transition: background 0.18s;
+}
+
+.request-item:hover, .notification-item:hover {
+background: rgba(59,130,246,0.12);
+}
+
+.notification-content {
+display: flex;
+align-items: center;
+gap: 12px;
+flex: 1;
+}
+
+.notification-text {
+font-size: 14.5px;
+line-height: 1.4;
+}
+
+.notification-time {
+font-size: 12px;
+opacity: 0.6;
+margin-left: auto;
+padding-left: 12px;
+white-space: nowrap;
+}
+
+.request-actions button {
+padding: 6px 16px;
+margin-left: 10px;
+border-radius: 8px;
+border: none;
+cursor: pointer;
+font-weight: bold;
+}
+
+.approve-btn {
+background: #10b981;
+color: white;
+}
+
+.decline-btn {
+background: #ef4444;
+color: white;
+}
+
+#userListModal {
+position: fixed;
+inset: 0;
+background: rgba(0,0,0,0.65);
+display: flex;
+align-items: center;
+justify-content: center;
+z-index: 200;
+}
+
+#userListModal .card {
+width: 90%;
+max-width: 480px;
+max-height: 85vh;
+overflow-y: auto;
+padding: 20px;
+position: relative;
+}
+
+.modal-close-btn {
+position: absolute;
+top: 12px;
+right: 16px;
+background: none;
+border: none;
+font-size: 28px;
+color: var(--text);
+cursor: pointer;
+opacity: 0.8;
+}
+
+.modal-close-btn:hover {
+opacity: 1;
+}
+
+.user-list-item {
+display: flex;
+align-items: center;
+gap: 12px;
+padding: 10px;
+cursor: pointer;
+border-bottom: 1px solid var(--border);
+}
+
+.user-list-item:hover {
+background: rgba(59,130,246,0.12);
+}
+
+.admin-user-item {
+padding: 12px;
+border-bottom: 1px solid var(--border);
+background: rgba(59,130,246,0.08);
+border-radius: 10px;
+margin-bottom: 10px;
+}
+
+.admin-user-item h4 {
+margin: 0 0 10px;
+color: #fa5252;
+}
+
+.admin-control-grid {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+gap: 10px;
+margin-top: 12px;
+}
+
+.admin-control-btn {
+padding: 8px 12px;
+font-size: 13px;
+border-radius: 8px;
+border: none;
+cursor: pointer;
+font-weight: bold;
+}
+
+.ban-msg {
+background: #1a0000;
+border: 2px solid #ef4444;
+color: #ff9999;
+padding: 24px;
+border-radius: 12px;
+text-align: center;
+margin: 40px auto;
+max-width: 520px;
+font-size: 18px;
+line-height: 1.6;
+}
+
+.admin-page-section {
+margin: 32px 0;
+padding: 20px;
+background: rgba(59,130,246,0.08);
+border-radius: 14px;
+border: 1px solid rgba(59,130,246,0.3);
+}
+
+.admin-page-section h4 {
+margin-top: 0;
+color: var(--accent);
+}
+
+.follow-cheat {
+display: flex;
+gap: 12px;
+align-items: center;
+margin: 16px 0;
+}
+
+.follow-cheat input {
+max-width: 140px;
+}
+
+/* ────────────────────────────────────────────────
+LOGIN PAGE - SMALLER CENTERED NEON BOX
+──────────────────────────────────────────────── */
+#login-container {
+min-height: 100vh;
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+padding: 20px 16px;
+}
+
+.login-box {
+background: rgba(8, 8, 18, 0.94);
+border: 2px solid #4a0d0d;
+border-radius: 24px;
+padding: 36px 28px;
+width: 100%;
+max-width: 380px;
+box-shadow: var(--neon-glow);
+backdrop-filter: blur(14px);
+animation: neon-breath 5s infinite alternate ease-in-out;
+}
+
+@keyframes neon-breath {
+0% { box-shadow: 0 0 20px #ff0033, 0 0 40px #ff0033, 0 0 70px #ff3366; }
+100% { box-shadow: 0 0 35px #ff3366, 0 0 70px #ff3366, 0 0 100px #ff6699; }
+}
+
+.login-title {
+font-size: 48px;
+font-weight: 900;
+color: #fa5252;
+text-align: center;
+margin-bottom: 32px;
+letter-spacing: -1.5px;
+text-shadow: 0 0 16px rgba(250, 82, 82, 0.8);
+}
+
+button.login-action {
+background: #000000;
+color: white;
+border: 1px solid #333;
+width: 100%;
+padding: 14px;
+font-size: 16px;
+margin: 10px 0;
+border-radius: 12px;
+font-weight: 700;
+transition: all 0.35s ease;
+}
+
+button.login-action:hover {
+background: #ff0033;
+color: black;
+border-color: #ff3366;
+box-shadow: 0 0 25px rgba(255, 0, 51, 0.7);
+transform: translateY(-3px);
+}
+
+#login input,
+#register input,
+#forgotPasswordForm input,
+#resetPasswordForm input,
+#deleteAccountSafe input {
+background: rgba(20,20,40,0.8);
+border: 1px solid #4a0d0d;
+color: white;
+margin: 12px 0;
+padding: 14px;
+border-radius: 12px;
+font-size: 16px;
+}
+
+#login input:focus,
+#register input:focus,
+#forgotPasswordForm input:focus,
+#resetPasswordForm input:focus,
+#deleteAccountSafe input:focus {
+border-color: #ff3366;
+box-shadow: 0 0 12px rgba(255, 51, 102, 0.5);
+outline: none;
+}
+
+.back-link {
+color: #8b5cf6;
+cursor: pointer;
+text-decoration: underline;
+margin-top: 20px;
+display: block;
+text-align: center;
+}
+
+.back-link:hover {
+color: #a78bfa;
+}
+
+@media (max-width: 480px) {
+.login-box {
+padding: 28px 20px;
+max-width: 340px;
+}
+.login-title {
+font-size: 42px;
+}
+}
+</style>
+</head>
+<body>
+
+<header id="topbar" class="hidden">
+<div class="logo" onclick="goHome()">SJR</div>
+
+<div class="search-bar">
+<input id="searchInput" placeholder="Search users..." />
+<div id="searchResults"></div>
+</div>
+
+<nav id="topNav">
+<button onclick="goHome()">Home</button>
+<button onclick="openProfile()">Profile</button>
+<button onclick="openMessages()">Messages</button>
+<button onclick="openNotifications()">
+Notifications
+<span id="notifBadge" class="notification-badge hidden">0</span>
+</button>
+<button onclick="openSettings()">Settings</button>
+<button id="adminBtn" class="hidden" onclick="openAdminPage()">ADMIN PAGE</button>
+<button onclick="logout()">Logout</button>
+</nav>
+</header>
+
+<div class="container">
+
+<!-- Centered Login Container - only visible when not logged in -->
+<div id="login-container">
+<div class="login-box">
+
+<div class="login-title">SJR</div>
+
+<div id="login">
+<h2>Login</h2>
+<input id="loginUser" placeholder="Username" autocomplete="username" />
+<input id="loginPass" type="password" placeholder="Password" autocomplete="current-password" />
+<button class="main" onclick="login()">Login</button>
+
+<div style="margin-top: 28px; display: flex; flex-direction: column; gap: 14px;">
+<button class="login-action" onclick="showRegister()">Register</button>
+<button class="login-action" onclick="showForgotPassword()">Forgot password?</button>
+<button class="login-action" onclick="showDeleteAccountSafe()">Delete account</button>
+</div>
+</div>
+
+<div id="register" class="hidden">
+<h2>Create account</h2>
+<input id="regName" placeholder="Name" />
+<input id="regUser" placeholder="Username" autocomplete="username" />
+<input id="regEmail" placeholder="Email" type="email" autocomplete="email" />
+<input id="regPass" type="password" placeholder="Password" autocomplete="new-password" />
+<input id="regSecretWord" type="text" placeholder="Secret word (remember it!)" autocomplete="off" />
+<p style="font-size:13px; opacity:0.7; margin:12px 0 20px;">
+Keep your secret word safe — needed for password reset & account deletion
+</p>
+<button class="main" onclick="register()">Register</button>
+<span class="back-link" onclick="showLogin()">Back to login</span>
+</div>
+
+<div id="forgotPasswordForm" class="hidden">
+<h2>Reset Password</h2>
+<p>Enter username and your secret word</p>
+<input id="fpUsername" placeholder="Username" autocomplete="username" />
+<input id="fpSecret" type="text" placeholder="Secret word" autocomplete="off" />
+<button class="main" onclick="submitForgotPassword()">Continue</button>
+<span class="back-link" onclick="showLogin()">Back to login</span>
+</div>
+
+<div id="resetPasswordForm" class="hidden">
+<h2>Set New Password</h2>
+<p>For account @<span id="resetForUser"></span></p>
+<input id="newPass1" type="password" placeholder="New password" autocomplete="new-password" />
+<input id="newPass2" type="password" placeholder="Repeat new password" autocomplete="new-password" />
+<button class="main" onclick="changePassword()">Change Password</button>
+<span class="back-link" onclick="showLogin()">Back to login</span>
+</div>
+
+<div id="deleteAccountSafe" class="hidden">
+<h2>Delete Account</h2>
+<p>This will <strong>permanently remove</strong> your account and all data.</p>
+<input id="delUser" placeholder="Your username" autocomplete="username" />
+<input id="delSecret" type="text" placeholder="Your secret word" autocomplete="off" />
+<button class="main" style="background:#ef4444; margin:20px 0 12px;"
+onclick="confirmDeleteAccount()">
+Verify & Proceed
+</button>
+<span class="back-link" onclick="showLogin()">Back to login</span>
+</div>
+
+<div id="deleteConfirmFinal" class="hidden">
+<div class="card ban-msg" style="border-color:#991b1b; background:rgba(30,0,0,0.4);">
+<h2 style="color:#ff4444;">LAST WARNING</h2>
+<p>Are you 100% sure you want to permanently delete</p>
+<p style="font-size:1.4em; margin:16px 0; color:#ff9999;">
+@<span id="finalDelUser"></span> ?
+</p>
+<div style="margin:32px 0; display:flex; gap:16px; justify-content:center;">
+<button class="main" style="background:#4caf50;"
+onclick="document.getElementById('deleteConfirmFinal').classList.add('hidden'); showLogin();">
+NO — Cancel
+</button>
+<button class="main" style="background:#ef4444;"
+onclick="performAccountDeletion(document.getElementById('finalDelUser').textContent, 'Account permanently deleted by owner.')">
+YES — Delete Forever
+</button>
+</div>
+</div>
+</div>
+
+</div>
+</div>
+
+<!-- BANNED SCREEN -->
+<div id="bannedScreen" class="hidden">
+<div class="card ban-msg">
+<h2 style="color:#ff4444;margin-bottom:20px;">ACCOUNT DISABLED</h2>
+<p id="bannedUsernameDisplay"></p>
+<p>Your account has been permanently disabled for violating <strong>SJR Rules and Policies</strong>.</p>
+<p style="margin-top:24px;opacity:0.9;">You are <strong>banned forever</strong>. No appeals. No recovery.</p>
+<button class="main" style="margin-top:32px;background:#4a0d0d;" onclick="logout()">Exit</button>
+</div>
+</div>
+
+<!-- HOME / FEED -->
+<div id="home" class="hidden">
+<div class="card">
+<textarea id="postText" placeholder="What's happening?" rows="3"></textarea>
+<div class="composer-actions">
+<div style="flex: 1;">
+<label class="file-label">
+<input type="file" id="postImage" accept="image/*" style="display:none;" />
+<span id="fileName">Choose file</span>
+</label>
+</div>
+<div id="charCount">0/280</div>
+<button class="main" onclick="createPost()">Post</button>
+</div>
+<div id="preview" class="hidden"><img id="imgPreview" /></div>
+</div>
+<div id="feed"></div>
+</div>
+
+<!-- PROFILE -->
+<div id="profile" class="hidden">
+<div class="card profile">
+<img id="profilePic" class="profile-big" src="" alt="Profile picture" />
+<h2 id="profileName"></h2>
+<div id="profileUser"></div>
+
+<div id="profileLinks" class="profile-links hidden"></div>
+
+<div id="privateNotice" class="private-notice hidden">
+<div class="lock-icon">🔒</div>
+This account is private<br />You must be approved to see posts.
+</div>
+
+<div class="stats" id="profileStats">
+<div onclick="showFollowingList()">
+<b id="followingCount">0</b><br />Following
+</div>
+<div onclick="showFollowersList()">
+<b id="followerCount">0</b><br />Followers
+</div>
+<div><b id="postCount">0</b><br />Posts</div>
+<div><b id="likeCount">0</b><br />Likes</div>
+</div>
+
+<div id="profileActions" class="hidden"></div>
+</div>
+<div id="profilePosts"></div>
+</div>
+
+<!-- MESSAGES -->
+<div id="messages" class="hidden">
+<div class="card">
+<h3>Messages</h3>
+<div id="conversationsList"></div>
+</div>
+</div>
+
+<!-- NOTIFICATIONS -->
+<div id="notifications" class="hidden">
+<div class="card">
+<h3>Notifications</h3>
+<div id="notificationsList"></div>
+</div>
+</div>
+
+<!-- CHAT -->
+<div id="chat" class="hidden">
+<div class="card">
+<h3 id="chatWith"></h3>
+<div id="chatHistory"></div>
+<textarea id="chatInput" placeholder="Type a message..." rows="2"></textarea>
+<div id="chat-actions">
+<button class="main" onclick="sendMessage()">Send</button>
+<button onclick="closeChat()">Back</button>
+</div>
+</div>
+</div>
+
+<!-- SETTINGS -->
+<div id="settings" class="hidden">
+<div class="card">
+<h3>Settings</h3>
+
+<div class="setting">
+<div>Dark Mode</div>
+<div id="themeToggle" class="toggle"></div>
+</div>
+
+<div class="setting">
+<div>Private Profile</div>
+<div id="privateToggle" class="toggle"></div>
+</div>
+
+<label>Name</label>
+<input id="setName" />
+
+<label>Username</label>
+<input id="setUser" />
+
+<label>Email</label>
+<input id="setEmail" />
+
+<label>Profile picture</label>
+<input type="file" id="setPfp" accept="image/*" />
+
+<h4 style="margin: 24px 0 12px;">Link Social Accounts</h4>
+<label>Instagram username</label>
+<input id="linkInstagram" placeholder="@username" />
+
+<label>YouTube channel / @handle</label>
+<input id="linkYoutube" placeholder="@channelname" />
+
+<label>Facebook profile</label>
+<input id="linkFacebook" placeholder="username" />
+
+<label>X (Twitter) username</label>
+<input id="linkX" placeholder="@username" />
+
+<label>TikTok username</label>
+<input id="linkTiktok" placeholder="@username" />
+
+<div id="verificationRequestSection" style="margin-top: 32px;">
+<h4>Request Verification</h4>
+<p style="opacity:0.8; margin-bottom:12px;">
+Explain why you deserve the verified badge (your content, audience size, authenticity, etc.)
+</p>
+<textarea id="verificationReason" rows="5" placeholder="Write your request here... (be detailed)"></textarea>
+<button class="main" onclick="sendVerificationRequest()" style="margin-top:12px; background:#8b5cf6;">
+Send Verification Request
+</button>
+</div>
+
+<div id="followRequestsSection" style="margin-top: 32px;">
+<h4>Follow Requests</h4>
+<div id="followRequestsList"></div>
+</div>
+
+<button class="main" onclick="saveSettings()" style="margin-top: 20px;">
+Save Changes
+</button>
+
+<div style="margin-top: 40px; border-top: 2px solid #ef4444; padding-top: 20px;">
+<div style="color: #ff6b6b; font-weight: bold;">Danger Zone</div>
+<button onclick="factoryReset()" style="background:#ef4444; color:white; padding:12px 24px; border:none; border-radius:12px; font-weight:bold; cursor:pointer; margin-top:12px;">
+Delete ALL Data (Factory Reset)
+</button>
+</div>
+</div>
+</div>
+
+<!-- ADMIN PANEL -->
+<div id="adminPage" class="hidden">
+<div class="card">
+<h3>Admin Control Panel — @SJR</h3>
+<p style="opacity:0.8; margin-bottom:20px;">Full system control. Use responsibly.</p>
+
+<div class="admin-page-section">
+<button class="main" onclick="loadVerificationRequests()" style="background:#8b5cf6; margin-bottom:16px;">
+View Verification Requests
+</button>
+<div id="verificationRequestsList" style="margin-top:16px;"></div>
+</div>
+
+<div class="admin-page-section">
+<h4>Account Management</h4>
+<button class="main" onclick="loadAllAccounts()" style="background:#9333ea; margin:12px 0;">
+Show All Accounts
+</button>
+<div id="allAccountsList" style="margin-top:16px;"></div>
+</div>
+
+<div class="admin-page-section">
+<h4>Self Boost (Followers Cheat)</h4>
+<div class="follow-cheat">
+<input type="number" id="forceFollowerCount" placeholder="Desired followers" min="0" />
+<button class="main" onclick="forceSetFollowers()" style="background:#f59e0b;">
+Apply to @sjr
+</button>
+</div>
+<p style="font-size:13px;opacity:0.7;margin-top:8px;">
+Current followers will be overwritten. Enter 0 to reset.
+</p>
+</div>
+
+<div class="admin-page-section">
+<h4>Quick Actions</h4>
+<button onclick="openProfile('sjr')" class="main" style="margin-right:12px;background:#10b981;">
+View My Profile
+</button>
+<button onclick="factoryReset()" class="main" style="background:#ef4444;">
+Full Factory Reset
+</button>
+</div>
+</div>
+</div>
+
+<!-- MODAL -->
+<div id="userListModal" class="hidden">
+<div class="card">
+<button class="modal-close-btn" onclick="document.getElementById('userListModal').classList.add('hidden')">×</button>
+<h3 id="listTitle">Users</h3>
+<div id="userListContent" style="margin: 20px 0;"></div>
+</div>
+</div>
+
+</div>
+
+<script>
+// ================================================
+// DATA HELPERS & CONSTANTS
+// ================================================
+const escapeHTML = str => str.replace(/[&<>"']/g, m => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[m]));
+
+function getUsers() { return JSON.parse(localStorage.getItem("users") || "[]"); }
+function saveUsers(users) { localStorage.setItem("users", JSON.stringify(users)); }
+function getPosts() { return JSON.parse(localStorage.getItem("posts") || "[]"); }
+function savePosts(posts) { localStorage.setItem("posts", JSON.stringify(posts)); }
+function getMessages() { return JSON.parse(localStorage.getItem("messages") || "[]"); }
+function saveMessages(msgs) { localStorage.setItem("messages", JSON.stringify(msgs)); }
+function getNotifications() { return JSON.parse(localStorage.getItem("notifications") || "[]"); }
+function saveNotifications(notifs) { localStorage.setItem("notifications", JSON.stringify(notifs)); }
+
+const verifyIcon = "https://static.vecteezy.com/system/resources/thumbnails/047/309/918/small/verified-badge-profile-icon-png.png";
+const adminVerifyIcon = "https://img.icons8.com/ios_filled/512/FA5252/instagram-verification-badge.png";
+const defaultPfp = "https://i.imgur.com/HeIi0wU.png";
+
+const socialLogos = {
+instagram: "https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png",
+youtube: "https://upload.wikimedia.org/wikipedia/commons/e/ef/Youtube_logo.png",
+facebook: "https://upload.wikimedia.org/wikipedia/commons/c/cd/Facebook_logo_%28square%29.png",
+x: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRJ3X0LHh-DqOD8MPrmr8K0XtCnIH6ftjqFQw&s",
+tiktok: "https://iconape.com/wp-content/files/fd/121669/svg/tiktok-logo-tik-tok-logo-icon-png-svg.png"
+};
+
+let currentUser = null;
+let currentChatUser = null;
+let viewingAsAdmin = false;
+
+// ================================================
+// PERSISTENT LOGIN + BAN CHECK + HIDE LOGIN FRAME
+// ================================================
+const savedUser = localStorage.getItem("currentUser");
+if (savedUser) {
+try {
+const parsed = JSON.parse(savedUser);
+const users = getUsers();
+const matching = users.find(u => u.username === parsed.username);
+if (matching) {
+if (matching.disabled) {
+showBannedScreen(matching.username);
+} else {
+currentUser = matching;
+document.getElementById("login-container").style.display = "none";
+document.getElementById("topbar").classList.remove("hidden");
+updateAdminButton();
+goHome();
+}
+}
+} catch (e) {}
+}
+
+// ================================================
+// THEME PERSISTENCE
+// ================================================
+if (localStorage.getItem("theme") === "light") {
+document.body.classList.add("light");
+}
+
+// ================================================
+// ADMIN BUTTON
+// ================================================
+function updateAdminButton() {
+const btn = document.getElementById("adminBtn");
+if (currentUser && currentUser.username === "sjr") {
+btn.classList.remove("hidden");
+} else {
+btn.classList.add("hidden");
+}
+}
+
+// ================================================
+// BANNED SCREEN
+// ================================================
+function showBannedScreen(username) {
+hideAll();
+document.getElementById("topbar").classList.add("hidden");
+document.getElementById("bannedScreen").classList.remove("hidden");
+document.getElementById("bannedUsernameDisplay").innerHTML =
+`<strong>@${escapeHTML(username)}</strong><br>Your account is permanently banned.`;
+}
+
+// ================================================
+// MODAL HELPERS
+// ================================================
+const modal = document.getElementById('userListModal');
+modal.addEventListener('click', e => {
+if (e.target === modal) modal.classList.add('hidden');
+});
+document.addEventListener('keydown', e => {
+if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+modal.classList.add('hidden');
+}
+});
+
+// ================================================
+// SEARCH (full)
+// ================================================
+document.getElementById("searchInput").addEventListener("input", function(e) {
+const q = this.value.trim().toLowerCase();
+const res = document.getElementById("searchResults");
+res.innerHTML = "";
+res.style.display = q ? "block" : "none";
+
+if (!q) return;
+
+getUsers()
+.filter(u => !u.disabled && (u.username.toLowerCase().includes(q) || (u.name && u.name.toLowerCase().includes(q))))
+.forEach(u => {
+const div = document.createElement("div");
+div.className = "search-result";
+div.innerHTML = `
+<img src="${u.pfp || defaultPfp}" class="pfp" style="width:36px;height:36px;" />
+<div>
+<b>@${escapeHTML(u.username)}</b><br />
+${escapeHTML(u.name || u.username)}
+</div>
+`;
+div.onclick = () => {
+openProfile(u.username);
+res.style.display = "none";
+this.value = "";
+};
+res.appendChild(div);
+});
+});
+
+document.getElementById("searchInput").addEventListener("keydown", function(e) {
+if (e.key === "Enter") {
+e.preventDefault();
+const q = this.value.trim();
+if (q.length > 0) {
+document.getElementById("searchResults").style.display = "none";
+showSearchResults(q);
+this.value = "";
+}
+}
+});
+
+document.addEventListener("click", e => {
+if (!document.querySelector(".search-bar")?.contains(e.target)) {
+document.getElementById("searchResults").style.display = "none";
+}
+});
+
+function showSearchResults(query) {
+hideAll();
+document.getElementById("home").classList.remove("hidden");
+
+const feed = document.getElementById("feed");
+feed.innerHTML = `<h3 style="margin:16px 0;">Search results for "${escapeHTML(query)}"</h3>`;
+
+const users = getUsers().filter(u =>
+!u.disabled &&
+(u.username.toLowerCase().includes(query.toLowerCase()) ||
+(u.name && u.name.toLowerCase().includes(query.toLowerCase())))
+);
+
+if (users.length === 0) {
+feed.innerHTML += '<p style="text-align:center; opacity:0.7; padding:40px;">No users found.</p>';
+return;
+}
+
+users.forEach(u => {
+const div = document.createElement("div");
+div.className = "card user-search-result";
+div.style.cursor = "pointer";
+div.innerHTML = `
+<div style="display:flex; align-items:center; gap:16px; padding:12px;">
+<img src="${u.pfp || defaultPfp}" class="pfp" style="width:56px;height:56px;" />
+<div>
+<div style="font-weight:700; font-size:17px;">
+${escapeHTML(u.name || u.username)}
+${u.verified ? `<img src="${u.username === 'sjr' ? adminVerifyIcon : verifyIcon}"
+class="${u.username === 'sjr' ? 'admin-verify' : 'verify'}"
+style="width:18px;height:18px;" />` : ""}
+</div>
+<div style="opacity:0.8; font-size:15px;">@${u.username}</div>
+</div>
+</div>
+`;
+div.onclick = () => openProfile(u.username);
+feed.appendChild(div);
+});
+}
+
+// ================================================
+// REGISTER
+// ================================================
+function register() {
+const name = document.getElementById("regName").value.trim();
+const user = document.getElementById("regUser").value.trim().toLowerCase();
+const email = document.getElementById("regEmail").value.trim();
+const pass = document.getElementById("regPass").value;
+const secretWord = document.getElementById("regSecretWord").value.trim();
+
+if (!user || !pass) return alert("Username and password are required");
+if (!secretWord) return alert("You must set a secret word (needed for password reset & account deletion)");
+
+let users = getUsers();
+if (users.some(u => u.username === user)) return alert("Username already taken");
+
+const isAdmin = user === "sjr";
+
+users.push({
+name,
+username: user,
+email,
+password: btoa(pass),
+secretWord: btoa(secretWord),
+pfp: "",
+verified: isAdmin,
+followers: [],
+following: [],
+private: false,
+followRequests: [],
+link_instagram: "",
+link_youtube: "",
+link_facebook: "",
+link_x: "",
+link_tiktok: "",
+verificationRequests: isAdmin ? [] : undefined,
+disabled: false
+});
+
+saveUsers(users);
+alert("Account created successfully!\n\nSecret word reminder: " + secretWord);
+showLogin();
+}
+
+// ================================================
+// LOGIN - FIXED: HIDES LOGIN CONTAINER
+// ================================================
+function login() {
+const username = document.getElementById("loginUser").value.trim().toLowerCase();
+const pass = document.getElementById("loginPass").value;
+
+const users = getUsers();
+const user = users.find(u => u.username === username && u.password === btoa(pass));
+
+if (!user) return alert("Incorrect username or password");
+
+if (user.disabled) {
+showBannedScreen(user.username);
+return;
+}
+
+currentUser = user;
+localStorage.setItem("currentUser", JSON.stringify({ username: user.username }));
+
+// Hide login frame completely
+document.getElementById("login-container").style.display = "none";
+// Show app
+document.getElementById("topbar").classList.remove("hidden");
+updateAdminButton();
+goHome();
+loadNotifications();
+}
+
+// ================================================
+// Forgot Password Flow
+// ================================================
+function showForgotPassword() {
+document.getElementById("login").classList.add("hidden");
+document.getElementById("forgotPasswordForm").classList.remove("hidden");
+}
+
+function submitForgotPassword() {
+const username = document.getElementById("fpUsername").value.trim().toLowerCase();
+const secret = document.getElementById("fpSecret").value.trim();
+
+if (!username || !secret) return alert("Please fill both fields");
+
+const users = getUsers();
+const user = users.find(u => u.username === username);
+
+if (!user) return alert("No account found with that username.");
+if (!user.secretWord) return alert("This account has no secret word set.");
+if (user.secretWord !== btoa(secret)) return alert("Incorrect secret word.");
+
+document.getElementById("resetForUser").textContent = username;
+document.getElementById("forgotPasswordForm").classList.add("hidden");
+document.getElementById("resetPasswordForm").classList.remove("hidden");
+
+window.resetTargetUsername = username;
+}
+
+function changePassword() {
+const pass1 = document.getElementById("newPass1").value;
+const pass2 = document.getElementById("newPass2").value;
+
+if (!pass1 || !pass2) return alert("Please enter and confirm new password");
+if (pass1 !== pass2) return alert("Passwords do not match!");
+
+let users = getUsers();
+const target = users.find(u => u.username === window.resetTargetUsername);
+
+if (!target) {
+alert("Session expired. Please try again.");
+showLogin();
+return;
+}
+
+target.password = btoa(pass1);
+saveUsers(users);
+
+alert("Password changed successfully!\nYou can now log in.");
+delete window.resetTargetUsername;
+showLogin();
+}
+
+// ================================================
+// Delete Account
+// ================================================
+function showDeleteAccountSafe() {
+document.getElementById("login").classList.add("hidden");
+document.getElementById("deleteAccountSafe").classList.remove("hidden");
+}
+
+function confirmDeleteAccount() {
+const username = document.getElementById("delUser").value.trim().toLowerCase();
+const secret = document.getElementById("delSecret").value.trim();
+
+if (!username || !secret) return alert("Please enter username and secret word");
+
+let users = getUsers();
+const user = users.find(u => u.username === username);
+
+if (!user) return alert("No account found.");
+if (!user.secretWord || user.secretWord !== btoa(secret)) {
+return alert("Username or secret word is incorrect.");
+}
+
+document.getElementById("finalDelUser").textContent = username;
+document.getElementById("deleteAccountSafe").classList.add("hidden");
+document.getElementById("deleteConfirmFinal").classList.remove("hidden");
+}
+
+// ================================================
+// POST + LIKE + NOTIFICATION
+// ================================================
+document.getElementById("postText").addEventListener("input", function() {
+const len = this.value.length;
+const countEl = document.getElementById("charCount");
+countEl.textContent = `${len}/280`;
+countEl.style.color = len > 280 ? "#ef4444" : "inherit";
+});
+
+document.getElementById("postImage").addEventListener("change", function(e) {
+const file = e.target.files[0];
+document.getElementById("fileName").textContent = file ? file.name : "Choose file";
+
+if (file) {
+const reader = new FileReader();
+reader.onload = ev => {
+document.getElementById("imgPreview").src = ev.target.result;
+document.getElementById("preview").classList.remove("hidden");
+};
+reader.readAsDataURL(file);
+} else {
+document.getElementById("preview").classList.add("hidden");
+}
+});
+
+function createPost(isRepost = false, original = null) {
+if (!currentUser) return alert("You must be logged in to post");
+
+const text = document.getElementById("postText").value.trim();
+const file = document.getElementById("postImage").files[0];
+
+if (!isRepost && text.length > 280) return alert("Post is too long (max 280 characters)");
+if (!isRepost && !text && !file) return alert("Post cannot be empty");
+
+const post = {
+id: Date.now(),
+user: currentUser.username,
+text: isRepost ? original.text : text,
+img: null,
+time: Date.now(),
+likes: [],
+comments: [],
+sharedFrom: isRepost ? original.user : null
+};
+
+if (file) {
+const reader = new FileReader();
+reader.onload = e => {
+post.img = e.target.result;
+finishPost(post);
+};
+reader.readAsDataURL(file);
+} else {
+finishPost(post);
+}
+}
+
+function finishPost(post) {
+let posts = getPosts();
+posts.unshift(post);
+savePosts(posts);
+
+document.getElementById("postText").value = "";
+document.getElementById("postImage").value = "";
+document.getElementById("fileName").textContent = "Choose file";
+document.getElementById("preview").classList.add("hidden");
+document.getElementById("charCount").textContent = "0/280";
+
+loadFeed();
+}
+
+function sharePost(id) {
+const original = getPosts().find(p => p.id === id);
+if (!original || !confirm("Repost this to your profile?")) return;
+createPost(true, original);
+}
+
+function createPostElement(p, isProfile = false) {
+const isOwn = p.user === currentUser?.username;
+const user = getUserByUsername(p.user) || {};
+const isAdmin = p.user === "sjr";
+const badgeSrc = isAdmin ? adminVerifyIcon : verifyIcon;
+const badge = user.verified ? `<img src="${badgeSrc}" class="${isAdmin ? 'admin-verify' : 'verify'}">` : "";
+
+const deleteBtn = isOwn ? `<span class="delete" onclick="deletePost(${p.id}, ${isProfile})">✕</span>` : "";
+const heartClass = p.likes.includes(currentUser?.username) ? "liked" : "";
+const sharedTag = p.sharedFrom ? `<div class="shared-from">Reposted from @${escapeHTML(p.sharedFrom)}</div>` : "";
+
+const el = document.createElement("div");
+el.className = "card";
+el.innerHTML = `
+<div class="post-header">
+<img src="${user.pfp || defaultPfp}" class="pfp" onclick="openProfile('${p.user}')" />
+<div class="username" onclick="openProfile('${p.user}')">@${escapeHTML(p.user)}</div>
+${badge}
+<div class="time">${timeAgo(p.time)}</div>
+${deleteBtn}
+</div>
+${sharedTag}
+<div class="post-content">${escapeHTML(p.text)}</div>
+${p.img ? `<div class="post-image-wrapper"><img src="${p.img}" alt="post image" /></div>` : ""}
+<div class="actions">
+<button onclick="likePost(${p.id}, ${isProfile})" class="${heartClass}">❤️ ${p.likes.length}</button>
+<button onclick="commentPost(${p.id}, ${isProfile})">💬 ${p.comments.length}</button>
+<button onclick="sharePost(${p.id})">↗ Share</button>
+</div>
+${p.comments.map(c => `<div class="comment">@${escapeHTML(c.user)}: ${escapeHTML(c.text)}</div>`).join("")}
+`;
+return el;
+}
+
+function loadFeed() {
+const feed = document.getElementById("feed");
+feed.innerHTML = "";
+
+getPosts()
+.filter(p => {
+const poster = getUserByUsername(p.user);
+return poster && !poster.disabled && (currentUser.following.includes(p.user) || p.user === currentUser.username);
+})
+.sort((a,b) => b.time - a.time)
+.forEach(p => feed.appendChild(createPostElement(p)));
+}
+
+function loadProfilePosts(username) {
+const container = document.getElementById("profilePosts");
+container.innerHTML = "";
+
+getPosts()
+.filter(p => p.user === username)
+.sort((a,b) => b.time - a.time)
+.forEach(p => container.appendChild(createPostElement(p, true)));
+}
+
+function deletePost(id, fromProfile = false) {
+if (!confirm("Delete this post?")) return;
+savePosts(getPosts().filter(p => p.id !== id));
+if (fromProfile) loadProfilePosts(currentUser.username);
+else loadFeed();
+}
+
+function likePost(id, fromProfile = false) {
+let posts = getPosts();
+let p = posts.find(x => x.id === id);
+if (!p) return;
+
+const idx = p.likes.indexOf(currentUser.username);
+
+if (idx === -1) {
+p.likes.push(currentUser.username);
+if (p.user !== currentUser.username) {
+addNotification({
+type: "like",
+from: currentUser.username,
+to: p.user,
+postId: id,
+time: Date.now()
+});
+}
+} else {
+p.likes.splice(idx, 1);
+}
+
+savePosts(posts);
+if (fromProfile) loadProfilePosts(currentUser.username);
+else loadFeed();
+}
+
+function commentPost(id, fromProfile = false) {
+const text = prompt("Write your comment:");
+if (!text?.trim()) return;
+
+let posts = getPosts();
+let p = posts.find(x => x.id === id);
+p.comments.push({ user: currentUser.username, text });
+savePosts(posts);
+
+if (fromProfile) loadProfilePosts(currentUser.username);
+else loadFeed();
+}
+
+function timeAgo(timestamp) {
+const seconds = Math.floor((Date.now() - timestamp) / 1000);
+if (seconds < 60) return "just now";
+if (seconds < 3600) return Math.floor(seconds / 60) + "m";
+if (seconds < 86400) return Math.floor(seconds / 3600) + "h";
+return Math.floor(seconds / 86400) + "d";
+}
+
+// ================================================
+// NOTIFICATIONS
+// ================================================
+function addNotification(data) {
+let notifs = getNotifications();
+notifs.unshift({
+...data,
+read: false,
+id: Date.now() + Math.random()
+});
+saveNotifications(notifs);
+updateNotificationBadge();
+}
+
+function markAllNotificationsRead() {
+let notifs = getNotifications();
+notifs.forEach(n => { if (n.to === currentUser.username) n.read = true; });
+saveNotifications(notifs);
+updateNotificationBadge();
+}
+
+function getUnreadCount() {
+return getNotifications().filter(n => n.to === currentUser.username && !n.read).length;
+}
+
+function updateNotificationBadge() {
+const badge = document.getElementById("notifBadge");
+const count = getUnreadCount();
+if (count > 0) {
+badge.textContent = count > 99 ? "99+" : count;
+badge.classList.remove("hidden");
+} else {
+badge.classList.add("hidden");
+}
+}
+
+function openNotifications() {
+hideAll();
+document.getElementById("notifications").classList.remove("hidden");
+loadNotifications();
+markAllNotificationsRead();
+}
+
+function loadNotifications() {
+const container = document.getElementById("notificationsList");
+container.innerHTML = "";
+
+const notifs = getNotifications()
+.filter(n => n.to === currentUser.username)
+.sort((a,b) => b.time - a.time);
+
+if (notifs.length === 0) {
+container.innerHTML = "<p style='text-align:center;opacity:0.7;padding:40px;'>No notifications yet.</p>";
+return;
+}
+
+notifs.forEach(n => {
+const fromUser = getUserByUsername(n.from) || { username: n.from, pfp: defaultPfp, verified: false, name: n.from };
+const isAdmin = fromUser.username === "sjr";
+const badgeSrc = isAdmin ? adminVerifyIcon : verifyIcon;
+
+const item = document.createElement("div");
+item.className = `notification-item ${n.read ? '' : 'unread'}`;
+item.style.background = n.read ? 'transparent' : 'rgba(59,130,246,0.08)';
+
+let text = "";
+let targetAction = "";
+
+if (n.type === "like") {
+text = `<strong>@${escapeHTML(n.from)}</strong> liked your post`;
+targetAction = `onclick="openProfilePost(${n.postId})"`;
+} else if (n.type === "follow") {
+text = `<strong>@${escapeHTML(n.from)}</strong> started following you`;
+targetAction = `onclick="openProfile('${n.from}')"`;
+} else if (n.type === "follow_request") {
+text = `<strong>@${escapeHTML(n.from)}</strong> requested to follow you`;
+targetAction = `onclick="openProfile('${n.from}')"`;
+}
+
+item.innerHTML = `
+<div class="notification-content" ${targetAction}>
+<img src="${fromUser.pfp || defaultPfp}" class="pfp" style="width:44px;height:44px;" />
+<div class="notification-text">
+${text}
+${fromUser.verified ? `<img src="${badgeSrc}" class="${isAdmin ? 'admin-verify' : 'verify'}" style="width:18px;height:18px;vertical-align:middle;">` : ""}
+</div>
+</div>
+<div class="notification-time">${timeAgo(n.time)}</div>
+`;
+
+if (n.type === "follow_request") {
+const actionsDiv = document.createElement("div");
+actionsDiv.innerHTML = `
+<button class="approve-btn" onclick="approveFollowRequest('${n.from}'); event.stopPropagation();">Accept</button>
+<button class="decline-btn" onclick="rejectFollowRequest('${n.from}'); event.stopPropagation();">Decline</button>
+`;
+item.appendChild(actionsDiv);
+}
+
+container.appendChild(item);
+});
+}
+
+function openProfilePost(postId) {
+const post = getPosts().find(p => p.id === postId);
+if (!post) {
+alert("Post no longer exists.");
+return;
+}
+openProfile(post.user);
+}
+
+// ================================================
+// FOLLOW SYSTEM
+// ================================================
+function toggleFollow(targetUsername) {
+let users = getUsers();
+let me = users.find(u => u.username === currentUser.username);
+let them = users.find(u => u.username === targetUsername);
+
+if (!them) return alert("User not found");
+
+if (them.private && !them.followers.includes(currentUser.username)) {
+return sendFollowRequest(targetUsername);
+}
+
+const idx = me.following.indexOf(targetUsername);
+let action;
+
+if (idx === -1) {
+me.following.push(targetUsername);
+them.followers.push(currentUser.username);
+action = "followed";
+addNotification("follow", currentUser.username, targetUsername);
+} else {
+me.following.splice(idx, 1);
+them.followers.splice(them.followers.indexOf(currentUser.username), 1);
+action = "unfollowed";
+}
+
+saveUsers(users);
+currentUser = me;
+alert(`You have ${action} @${targetUsername}!`);
+openProfile(targetUsername);
+updateNotificationBadge();
+}
+
+function sendFollowRequest(targetUsername) {
+let users = getUsers();
+let target = users.find(u => u.username === targetUsername);
+if (!target) return alert("User not found");
+
+if (!target.followRequests) target.followRequests = [];
+if (!target.followRequests.includes(currentUser.username)) {
+target.followRequests.push(currentUser.username);
+saveUsers(users);
+
+addNotification("follow_request", currentUser.username, targetUsername);
+
+alert(`Follow request sent to @${targetUsername}.`);
+openProfile(targetUsername);
+updateNotificationBadge();
+}
+}
+
+function approveFollowRequest(username) {
+let users = getUsers();
+let me = users.find(u => u.username === currentUser.username);
+let requester = users.find(u => u.username === username);
+
+if (!me || !requester) return;
+
+if (!me.followers.includes(username)) me.followers.push(username);
+me.followRequests = me.followRequests.filter(u => u !== username);
+
+if (!requester.following.includes(currentUser.username)) {
+requester.following.push(currentUser.username);
+}
+
+saveUsers(users);
+currentUser = me;
+
+loadNotifications();
+updateNotificationBadge();
+alert(`@${username} is now following you!`);
+}
+
+function rejectFollowRequest(username) {
+let users = getUsers();
+let me = users.find(u => u.username === currentUser.username);
+
+if (!me) return;
+
+me.followRequests = me.followRequests.filter(u => u !== username);
+saveUsers(users);
+currentUser = me;
+loadNotifications();
+updateNotificationBadge();
+alert(`Follow request from @${username} declined.`);
+}
+
+function showFollowingList() {
+const following = currentUser.following || [];
+if (following.length === 0) return alert("You are not following anyone yet.");
+
+document.getElementById("listTitle").textContent = "Following";
+const content = document.getElementById("userListContent");
+content.innerHTML = "";
+
+following.forEach(un => {
+const u = getUserByUsername(un) || { name: un, pfp: defaultPfp };
+const div = document.createElement("div");
+div.className = "user-list-item";
+div.innerHTML = `
+<img src="${u.pfp}" style="width:40px;height:40px;border-radius:50%;object-fit:cover;border:1px solid var(--border);" />
+<div>
+<div style="font-weight:bold;">${escapeHTML(u.name || un)}</div>
+<div style="opacity:0.8;font-size:14px;">@${un}</div>
+</div>
+`;
+div.onclick = () => {
+document.getElementById("userListModal").classList.add('hidden');
+openProfile(un);
+};
+content.appendChild(div);
+});
+
+document.getElementById("userListModal").classList.remove("hidden");
+}
+
+function showFollowersList() {
+const followers = currentUser.followers || [];
+if (followers.length === 0) return alert("No one is following you yet.");
+
+document.getElementById("listTitle").textContent = "Followers";
+const content = document.getElementById("userListContent");
+content.innerHTML = "";
+
+followers.forEach(un => {
+const u = getUserByUsername(un) || { name: un, pfp: defaultPfp };
+const div = document.createElement("div");
+div.className = "user-list-item";
+div.innerHTML = `
+<img src="${u.pfp}" style="width:40px;height:40px;border-radius:50%;object-fit:cover;border:1px solid var(--border);" />
+<div>
+<div style="font-weight:bold;">${escapeHTML(u.name || un)}</div>
+<div style="opacity:0.8;font-size:14px;">@${un}</div>
+</div>
+`;
+div.onclick = () => {
+document.getElementById("userListModal").classList.add('hidden');
+openProfile(un);
+};
+content.appendChild(div);
+});
+
+document.getElementById("userListModal").classList.remove("hidden");
+}
+
+// ================================================
+// PROFILE
+// ================================================
+function openProfile(username = currentUser?.username, forceAdminView = false) {
+if (!username) return alert("No user selected");
+
+hideAll();
+document.getElementById("profile").classList.remove("hidden");
+
+const target = getUserByUsername(username);
+if (!target) return alert("User not found");
+
+const isSelf = target.username === currentUser?.username;
+const isAdminViewing = currentUser?.username === "sjr" && (forceAdminView || !isSelf);
+
+viewingAsAdmin = isAdminViewing;
+
+document.getElementById("profilePic").src = target.pfp || defaultPfp;
+
+const isAdmin = target.username === "sjr";
+const badgeSrc = isAdmin ? adminVerifyIcon : verifyIcon;
+const badgeHTML = target.verified ? ` <img src="${badgeSrc}" class="${isAdmin ? 'admin-verify' : 'verify'}">` : "";
+
+document.getElementById("profileName").innerHTML = escapeHTML(target.name || target.username) + badgeHTML;
+document.getElementById("profileUser").textContent = "@" + target.username;
+
+const myPosts = getPosts().filter(p => p.user === username);
+document.getElementById("postCount").textContent = myPosts.length;
+document.getElementById("likeCount").textContent = myPosts.reduce((sum, p) => sum + p.likes.length, 0);
+document.getElementById("followerCount").textContent = target.followers?.length || 0;
+document.getElementById("followingCount").textContent = target.following?.length || 0;
+
+const linksDiv = document.getElementById("profileLinks");
+linksDiv.innerHTML = "";
+linksDiv.classList.add("hidden");
+
+const platforms = [
+{ key: "instagram", url: val => `https://instagram.com/${val.replace(/^@/, '')}` },
+{ key: "youtube", url: val => `https://youtube.com/@${val.replace(/^@/, '')}` },
+{ key: "facebook", url: val => `https://facebook.com/${val}` },
+{ key: "x", url: val => `https://x.com/${val.replace(/^@/, '')}` },
+{ key: "tiktok", url: val => `https://tiktok.com/@${val.replace(/^@/, '')}` }
+];
+
+let hasAny = false;
+platforms.forEach(p => {
+const val = target[`link_${p.key}`];
+if (val && val.trim()) {
+hasAny = true;
+const a = document.createElement("a");
+a.href = p.url(val.trim());
+a.target = "_blank";
+a.rel = "noopener noreferrer";
+a.innerHTML = `<img src="${socialLogos[p.key]}" alt="${p.key}" class="profile-link" />`;
+linksDiv.appendChild(a);
+}
+});
+if (hasAny) linksDiv.classList.remove("hidden");
+
+const notice = document.getElementById("privateNotice");
+const stats = document.getElementById("profileStats");
+const postsContainer = document.getElementById("profilePosts");
+const actions = document.getElementById("profileActions");
+
+notice.classList.add("hidden");
+stats.classList.remove("hidden");
+postsContainer.innerHTML = "";
+actions.innerHTML = "";
+actions.classList.toggle("hidden", isSelf && !isAdminViewing);
+
+if (isAdminViewing) {
+notice.classList.add("hidden");
+loadProfilePosts(username);
+const adminControls = document.createElement("div");
+adminControls.style.marginTop = "20px";
+adminControls.innerHTML = `
+<button class="main" style="background:#9333ea;margin-right:12px;" onclick="adminRemoveVerify('${username}')">
+Remove Verify Badge
+</button>
+<button class="main" style="background:#ef4444;" onclick="adminDisableAccount('${username}')">
+Disable Account
+</button>
+`;
+actions.appendChild(adminControls);
+}
+else if (target.private && !isSelf) {
+const isFollower = target.followers.includes(currentUser.username);
+const isRequested = target.followRequests?.includes(currentUser.username) || false;
+
+if (!isFollower) {
+notice.classList.remove("hidden");
+stats.classList.add("hidden");
+postsContainer.innerHTML = "";
+
+const btn = document.createElement("button");
+if (isRequested) {
+btn.textContent = "Requested";
+btn.className = "requested-btn";
+btn.disabled = true;
+} else {
+btn.textContent = "Follow";
+btn.className = "follow-btn";
+btn.onclick = () => sendFollowRequest(username);
+}
+actions.appendChild(btn);
+
+return;
+}
+}
+
+if (!isSelf && !isAdminViewing) {
+const isFollowing = currentUser.following.includes(username);
+const btn = document.createElement("button");
+btn.textContent = isFollowing ? "Unfollow" : "Follow";
+btn.className = `follow-btn ${isFollowing ? "unfollow" : ""}`;
+btn.onclick = () => toggleFollow(username);
+actions.appendChild(btn);
+
+const msgBtn = document.createElement("button");
+msgBtn.textContent = "Message";
+msgBtn.className = "message-btn";
+msgBtn.onclick = () => openChat(username);
+actions.appendChild(msgBtn);
+}
+
+loadProfilePosts(username);
+}
+
+// ================================================
+// ADMIN REMOVE VERIFY
+// ================================================
+function adminRemoveVerify(username) {
+if (!confirm(`Remove verification badge from @${username}?`)) return;
+
+let users = getUsers();
+const target = users.find(u => u.username === username);
+if (!target) return alert("User not found");
+
+target.verified = false;
+saveUsers(users);
+alert(`Verification removed from @${username}.`);
+openProfile(username, true);
+}
+
+// ================================================
+// ADMIN DISABLE ACCOUNT
+// ================================================
+function adminDisableAccount(username) {
+if (!confirm(`PERMANENTLY disable @${username}? They will see ban message on login.`)) return;
+
+let users = getUsers();
+const target = users.find(u => u.username === username);
+if (!target) return alert("User not found");
+
+target.disabled = true;
+saveUsers(users);
+
+performAccountDeletion(username, "Account disabled by admin.", false);
+
+alert(`@${username} has been permanently disabled.`);
+loadAllAccounts();
+}
+
+function performAccountDeletion(username, message, fullCleanup = true) {
+let users = getUsers();
+let posts = getPosts();
+let messages = getMessages();
+let notifs = getNotifications();
+
+users = users.filter(u => u.username !== username);
+posts = posts.filter(p => p.user !== username && p.sharedFrom !== username);
+messages = messages.filter(m => m.from !== username && m.to !== username);
+notifs = notifs.filter(n => n.to !== username && n.from !== username);
+
+users.forEach(u => {
+u.followers = u.followers.filter(f => f !== username);
+u.following = u.following.filter(f => f !== username);
+u.followRequests = u.followRequests ? u.followRequests.filter(r => r !== username) : [];
+if (u.verificationRequests) {
+u.verificationRequests = u.verificationRequests.filter(r => r.from !== username);
+}
+});
+
+saveUsers(users);
+savePosts(posts);
+saveMessages(messages);
+saveNotifications(notifs);
+
+if (currentUser && currentUser.username === username) {
+logout();
+alert(message);
+}
+}
+
+// ================================================
+// ADMIN ALL ACCOUNTS
+// ================================================
+function loadAllAccounts() {
+const container = document.getElementById("allAccountsList");
+container.innerHTML = "";
+
+const users = getUsers();
+
+if (users.length <= 1) {
+container.innerHTML = '<p style="text-align:center;opacity:0.7;padding:30px;">No other accounts yet.</p>';
+return;
+}
+
+users.forEach(u => {
+if (u.username === "sjr") return;
+
+const div = document.createElement("div");
+div.className = "admin-user-item";
+div.innerHTML = `
+<h4>@${escapeHTML(u.username)} ${u.verified ? '✓' : ''} ${u.disabled ? '— DISABLED' : ''}</h4>
+<div>Name: ${escapeHTML(u.name || '—')}</div>
+<div style="margin:8px 0;">Followers: ${u.followers?.length || 0} • Following: ${u.following?.length || 0}</div>
+
+<div class="admin-control-grid">
+<button class="admin-control-btn" style="background:#9333ea;color:white;" onclick="adminRemoveVerify('${u.username}')">
+Remove Verify
+</button>
+<button class="admin-control-btn" style="background:#ef4444;color:white;" onclick="adminDisableAccount('${u.username}')">
+Disable Account
+</button>
+<button class="admin-control-btn" style="background:#3b82f6;color:white;" onclick="adminChangeUsername('${u.username}')">
+Change Username
+</button>
+<button class="admin-control-btn" style="background:#10b981;color:white;" onclick="adminChangeName('${u.username}')">
+Change Name
+</button>
+<button class="admin-control-btn" style="background:#8b5cf6;color:white;" onclick="adminChangePfp('${u.username}')">
+Set PFP (URL)
+</button>
+<button class="admin-control-btn" style="background:#f97316;color:white;" onclick="openProfile('${u.username}', true)">
+View Profile
+</button>
+</div>
+`;
+container.appendChild(div);
+});
+}
+
+function adminChangeUsername(oldUsername) {
+const newUsername = prompt(`Enter new username for @${oldUsername}:`, oldUsername)?.trim().toLowerCase();
+if (!newUsername || newUsername === oldUsername) return;
+
+let users = getUsers();
+if (users.some(u => u.username === newUsername)) return alert("Username already taken!");
+
+const target = users.find(u => u.username === oldUsername);
+if (!target) return;
+
+const oldName = target.username;
+target.username = newUsername;
+
+updateReferences(oldName, newUsername);
+
+saveUsers(users);
+
+if (currentUser && currentUser.username === oldName) {
+currentUser.username = newUsername;
+localStorage.setItem("currentUser", JSON.stringify({ username: newUsername }));
+}
+
+alert(`Username changed: @${oldName} → @${newUsername}`);
+loadAllAccounts();
+}
+
+function adminChangeName(username) {
+const newName = prompt(`Enter new display name for @${username}:`)?.trim();
+if (!newName) return;
+
+let users = getUsers();
+const target = users.find(u => u.username === username);
+if (!target) return;
+
+target.name = newName;
+saveUsers(users);
+alert(`Display name updated to "${newName}"`);
+loadAllAccounts();
+}
+
+function adminChangePfp(username) {
+const url = prompt(`Enter direct image URL for @${username}'s new profile picture:`)?.trim();
+if (!url) return;
+
+let users = getUsers();
+const target = users.find(u => u.username === username);
+if (!target) return;
+
+target.pfp = url;
+saveUsers(users);
+alert(`Profile picture updated for @${username}`);
+loadAllAccounts();
+}
+
+function updateReferences(oldUsername, newUsername) {
+let posts = getPosts();
+let messages = getMessages();
+let notifs = getNotifications();
+let users = getUsers();
+
+posts.forEach(p => {
+if (p.user === oldUsername) p.user = newUsername;
+if (p.sharedFrom === oldUsername) p.sharedFrom = newUsername;
+p.likes = p.likes.map(u => u === oldUsername ? newUsername : u);
+p.comments.forEach(c => { if (c.user === oldUsername) c.user = newUsername; });
+});
+
+messages.forEach(m => {
+if (m.from === oldUsername) m.from = newUsername;
+if (m.to === oldUsername) m.to = newUsername;
+});
+
+notifs.forEach(n => {
+if (n.from === oldUsername) n.from = newUsername;
+if (n.to === oldUsername) n.to = newUsername;
+});
+
+users.forEach(u => {
+u.followers = u.followers.map(f => f === oldUsername ? newUsername : f);
+u.following = u.following.map(f => f === oldUsername ? newUsername : f);
+u.followRequests = u.followRequests ? u.followRequests.map(r => r === oldUsername ? newUsername : r) : [];
+if (u.verificationRequests) {
+u.verificationRequests = u.verificationRequests.filter(r => r.from !== oldUsername);
+}
+});
+
+savePosts(posts);
+saveMessages(messages);
+saveNotifications(notifs);
+saveUsers(users);
+}
+
+function forceSetFollowers() {
+const countInput = document.getElementById("forceFollowerCount");
+const count = parseInt(countInput.value.trim());
+
+if (isNaN(count) || count < 0) return alert("Enter a valid number ≥ 0");
+
+let users = getUsers();
+const admin = users.find(u => u.username === "sjr");
+if (!admin) return alert("Admin account not found");
+
+admin.followers = Array.from({length: count}, (_, i) => `fake_user_${i+1}`);
+
+saveUsers(users);
+alert(`@sjr now has ${count} followers (display only).`);
+countInput.value = "";
+}
+
+// ================================================
+// MESSAGES / CHAT
+// ================================================
+function openMessages() {
+hideAll();
+document.getElementById("messages").classList.remove("hidden");
+loadConversations();
+}
+
+function loadConversations() {
+const list = document.getElementById("conversationsList");
+list.innerHTML = "";
+
+const allMsgs = getMessages();
+const convSet = new Set();
+
+allMsgs.forEach(m => {
+if (m.from === currentUser.username) convSet.add(m.to);
+if (m.to === currentUser.username) convSet.add(m.from);
+});
+
+if (convSet.size === 0) {
+list.innerHTML = "<p style='text-align:center;opacity:0.7;padding:20px;'>No messages yet.</p>";
+return;
+}
+
+[...convSet].sort().forEach(other => {
+const msgs = allMsgs.filter(m =>
+(m.from === other && m.to === currentUser.username) ||
+(m.from === currentUser.username && m.to === other)
+);
+if (msgs.length === 0) return;
+
+const last = msgs.sort((a,b) => b.time - a.time)[0];
+const user = getUserByUsername(other) || { name: other, pfp: defaultPfp, verified: false };
+
+const item = document.createElement("div");
+item.className = "conversation-item";
+item.innerHTML = `
+<img src="${user.pfp || defaultPfp}" class="pfp" style="width:50px;height:50px;" />
+<div style="flex:1;">
+<div style="font-weight:700;">
+${escapeHTML(user.name || other)}
+${user.verified ? `<img src="${user.username === 'sjr' ? adminVerifyIcon : verifyIcon}" class="verify" style="width:16px;height:16px;" />` : ""}
+<span style="opacity:0.6;font-size:13px;margin-left:8px;">@${other}</span>
+</div>
+<div class="conversation-last-msg">
+${escapeHTML(last.text.substring(0, 60))}${last.text.length > 60 ? '...' : ''}
+</div>
+</div>
+<div style="font-size:13px;opacity:0.6;">${timeAgo(last.time)}</div>
+`;
+item.onclick = () => openChat(other);
+list.appendChild(item);
+});
+}
+
+function openChat(username) {
+if (!currentUser) return alert("You must be logged in");
+
+const target = getUserByUsername(username);
+if (!target) return alert("User not found");
+
+currentChatUser = username;
+
+hideAll();
+document.getElementById("chat").classList.remove("hidden");
+
+const isAdmin = target.username === "sjr";
+const badgeSrc = isAdmin ? adminVerifyIcon : verifyIcon;
+
+document.getElementById("chatWith").innerHTML = `
+<div style="display: flex; align-items: center; gap: 12px; font-size: 18px; font-weight: 600; margin-bottom: 12px;">
+<img src="${target.pfp || defaultPfp}" class="pfp" style="width: 42px; height: 42px;" />
+@${escapeHTML(username)}
+${target.verified ? `<img src="${badgeSrc}" class="${isAdmin ? 'admin-verify' : 'verify'}" style="height: 22px; margin-left: 4px;" />` : ""}
+</div>
+`;
+
+loadChatHistory();
+}
+
+function loadChatHistory() {
+const history = document.getElementById("chatHistory");
+history.innerHTML = "";
+
+const messages = getMessages().filter(m =>
+(m.from === currentUser.username && m.to === currentChatUser) ||
+(m.from === currentChatUser && m.to === currentUser.username)
+).sort((a,b) => a.time - b.time);
+
+messages.forEach(msg => {
+const div = document.createElement("div");
+div.className = `chat-message ${msg.from === currentUser.username ? "sent" : "received"}`;
+div.textContent = msg.text;
+history.appendChild(div);
+});
+
+history.scrollTop = history.scrollHeight;
+}
+
+function sendMessage() {
+if (!currentChatUser) return;
+
+const input = document.getElementById("chatInput");
+const text = input.value.trim();
+if (!text) return;
+
+let messages = getMessages();
+messages.push({
+from: currentUser.username,
+to: currentChatUser,
+text,
+time: Date.now()
+});
+
+saveMessages(messages);
+input.value = "";
+loadChatHistory();
+}
+
+function closeChat() {
+currentChatUser = null;
+document.getElementById("chat").classList.add("hidden");
+openMessages();
+}
+
+// ================================================
+// SETTINGS
+// ================================================
+function openSettings() {
+hideAll();
+document.getElementById("settings").classList.remove("hidden");
+
+document.getElementById("setName").value = currentUser.name || "";
+document.getElementById("setUser").value = currentUser.username || "";
+document.getElementById("setEmail").value = currentUser.email || "";
+
+document.getElementById("themeToggle").classList.toggle("active", document.body.classList.contains("light"));
+document.getElementById("privateToggle").classList.toggle("active", currentUser.private || false);
+
+document.getElementById("linkInstagram").value = currentUser.link_instagram || "";
+document.getElementById("linkYoutube").value = currentUser.link_youtube || "";
+document.getElementById("linkFacebook").value = currentUser.link_facebook || "";
+document.getElementById("linkX").value = currentUser.link_x || "";
+document.getElementById("linkTiktok").value = currentUser.link_tiktok || "";
+
+loadFollowRequests();
+}
+
+document.getElementById("themeToggle").onclick = function() {
+document.body.classList.toggle("light");
+this.classList.toggle("active");
+localStorage.setItem("theme", document.body.classList.contains("light") ? "light" : "dark");
+};
+
+document.getElementById("privateToggle").onclick = function() {
+this.classList.toggle("active");
+currentUser.private = this.classList.contains("active");
+};
+
+function loadFollowRequests() {
+const container = document.getElementById("followRequestsList");
+container.innerHTML = "";
+
+const requests = currentUser.followRequests || [];
+if (requests.length === 0) {
+container.innerHTML = "<p style='opacity:0.7;text-align:center;'>No pending follow requests.</p>";
+return;
+}
+
+requests.forEach(username => {
+const user = getUserByUsername(username) || { name: username, pfp: defaultPfp };
+const div = document.createElement("div");
+div.className = "request-item";
+div.innerHTML = `
+<div style="display:flex;align-items:center;gap:12px;">
+<img src="${user.pfp}" style="width:40px;height:40px;border-radius:50%;" />
+<div>
+<div style="font-weight:bold;">${escapeHTML(user.name || username)}</div>
+<div style="opacity:0.7;">@${username}</div>
+</div>
+</div>
+<div>
+<button class="approve-btn" onclick="approveFollowRequest('${username}')">Accept</button>
+<button class="decline-btn" onclick="rejectFollowRequest('${username}')">Decline</button>
+</div>
+`;
+container.appendChild(div);
+});
+}
+
+// ================================================
+// VERIFICATION REQUESTS
+// ================================================
+function sendVerificationRequest() {
+if (!currentUser) return alert("You must be logged in");
+if (currentUser.username === "sjr") return alert("Admin cannot request verification for themselves");
+
+const reason = document.getElementById("verificationReason").value.trim();
+if (!reason) return alert("Please explain why you want verification");
+
+let users = getUsers();
+let admin = users.find(u => u.username === "sjr");
+
+if (!admin) return alert("Admin account (@sjr) does not exist yet.");
+
+if (!admin.verificationRequests) admin.verificationRequests = [];
+
+if (admin.verificationRequests.some(r => r.from === currentUser.username)) {
+return alert("You already sent a verification request. Wait for admin review.");
+}
+
+admin.verificationRequests.push({
+from: currentUser.username,
+reason: reason,
+time: Date.now()
+});
+
+saveUsers(users);
+document.getElementById("verificationReason").value = "";
+alert("Verification request sent to @sjr!");
+}
+
+function openAdminPage() {
+if (!currentUser || currentUser.username !== "sjr") {
+return alert("Access denied. Only @sjr can enter.");
+}
+
+hideAll();
+document.getElementById("adminPage").classList.remove("hidden");
+loadVerificationRequests();
+}
+
+function loadVerificationRequests() {
+const container = document.getElementById("verificationRequestsList");
+container.innerHTML = "";
+
+let users = getUsers();
+let admin = users.find(u => u.username === "sjr");
+
+if (!admin || !admin.verificationRequests || admin.verificationRequests.length === 0) {
+container.innerHTML = "<p style='text-align:center; opacity:0.7; padding:40px;'>No pending verification requests.</p>";
+return;
+}
+
+admin.verificationRequests.forEach((req, index) => {
+const user = getUserByUsername(req.from) || { name: req.from, pfp: defaultPfp };
+const item = document.createElement("div");
+item.className = "verification-request-item";
+item.innerHTML = `
+<div style="display:flex; align-items:center; gap:14px; margin-bottom:12px;">
+<img src="${user.pfp || defaultPfp}" class="pfp" style="width:54px; height:54px;" />
+<div>
+<div style="font-weight:bold; font-size:16px;">${escapeHTML(user.name || req.from)}</div>
+<div style="opacity:0.8; font-size:14px;">@${req.from} — ${new Date(req.time).toLocaleDateString()}</div>
+</div>
+</div>
+<div style="margin:12px 0; line-height:1.5;">
+<strong>Reason:</strong><br />
+${escapeHTML(req.reason)}
+</div>
+<div style="margin-top:12px;">
+<button class="approve-btn" onclick="adminApproveVerification('${req.from}', ${index})">
+Accept — Grant Badge
+</button>
+<button class="decline-btn" onclick="adminDeclineVerification(${index})">
+Decline
+</button>
+</div>
+`;
+container.appendChild(item);
+});
+}
+
+function adminApproveVerification(username, index) {
+if (!confirm(`Grant verified badge to @${username}?`)) return;
+
+let users = getUsers();
+let admin = users.find(u => u.username === "sjr");
+let target = users.find(u => u.username === username);
+
+if (!admin || !target) return alert("Error: user or admin not found");
+
+target.verified = true;
+admin.verificationRequests.splice(index, 1);
+
+saveUsers(users);
+alert(`@${username} is now verified!`);
+loadVerificationRequests();
+}
+
+function adminDeclineVerification(index) {
+if (!confirm("Decline this request?")) return;
+
+let users = getUsers();
+let admin = users.find(u => u.username === "sjr");
+
+if (!admin) return;
+
+admin.verificationRequests.splice(index, 1);
+saveUsers(users);
+alert("Request declined.");
+loadVerificationRequests();
+}
+
+// ================================================
+// SAVE SETTINGS
+// ================================================
+function saveSettings() {
+let users = getUsers();
+let u = users.find(x => x.username === currentUser.username);
+
+const newName = document.getElementById("setName").value.trim();
+const newUser = document.getElementById("setUser").value.trim().toLowerCase();
+const newEmail = document.getElementById("setEmail").value.trim();
+
+if (newUser !== currentUser.username && users.some(x => x.username === newUser)) {
+return alert("Username already taken!");
+}
+
+const oldUsername = u.username;
+
+u.name = newName;
+u.username = newUser;
+u.email = newEmail;
+u.private = currentUser.private;
+
+u.link_instagram = document.getElementById("linkInstagram").value.trim();
+u.link_youtube = document.getElementById("linkYoutube").value.trim();
+u.link_facebook = document.getElementById("linkFacebook").value.trim();
+u.link_x = document.getElementById("linkX").value.trim();
+u.link_tiktok = document.getElementById("linkTiktok").value.trim();
+
+const file = document.getElementById("setPfp").files[0];
+if (file) {
+const r = new FileReader();
+r.onload = e => {
+u.pfp = e.target.result;
+currentUser.pfp = u.pfp;
+currentUser.username = newUser;
+saveUsers(users);
+if (oldUsername !== newUser) {
+updateReferences(oldUsername, newUser);
+}
+alert("Settings saved!");
+openProfile();
+};
+r.readAsDataURL(file);
+} else {
+currentUser.username = newUser;
+saveUsers(users);
+if (oldUsername !== newUser) {
+updateReferences(oldUsername, newUser);
+}
+alert("Settings saved!");
+openProfile();
+}
+}
+
+// ================================================
+// FACTORY RESET
+// ================================================
+function factoryReset() {
+if (!confirm("This will PERMANENTLY delete ALL data.\nAre you sure?")) return;
+if (!confirm("Second confirmation — irreversible.")) return;
+
+localStorage.removeItem("users");
+localStorage.removeItem("posts");
+localStorage.removeItem("messages");
+localStorage.removeItem("notifications");
+localStorage.removeItem("theme");
+localStorage.removeItem("currentUser");
+
+alert("All data wiped. Reloading...");
+location.reload();
+}
+
+// ================================================
+// NAVIGATION
+// ================================================
+function goHome() {
+hideAll();
+document.getElementById("home").classList.remove("hidden");
+loadFeed();
+}
+
+function hideAll() {
+const pages = ["home","profile","messages","notifications","settings","chat","register","forgotPasswordForm","resetPasswordForm","deleteAccountSafe","deleteConfirmFinal","adminPage","bannedScreen"];
+pages.forEach(id => {
+const el = document.getElementById(id);
+if (el) el.classList.add("hidden");
+});
+// Make sure login container is hidden when any page is shown (after login)
+document.getElementById("login-container").style.display = "none";
+}
+
+function showLogin() {
+document.getElementById("login").classList.remove("hidden");
+document.getElementById("register").classList.add("hidden");
+document.getElementById("forgotPasswordForm").classList.add("hidden");
+document.getElementById("resetPasswordForm").classList.add("hidden");
+document.getElementById("deleteAccountSafe").classList.add("hidden");
+document.getElementById("deleteConfirmFinal").classList.add("hidden");
+document.getElementById("login-container").style.display = "flex";
+}
+
+function showRegister() {
+document.getElementById("login").classList.add("hidden");
+document.getElementById("register").classList.remove("hidden");
+}
+
+function logout() {
+currentUser = null;
+localStorage.removeItem("currentUser");
+location.reload();
+}
+
+function getUserByUsername(un) {
+return getUsers().find(u => u.username === un);
+}
+
+// ================================================
+// INITIAL LOAD - HIDE LOGIN IF LOGGED IN
+// ================================================
+if (currentUser) {
+document.getElementById("login-container").style.display = "none";
+document.getElementById("topbar").classList.remove("hidden");
+updateAdminButton();
+goHome();
+} else {
+document.getElementById("login-container").style.display = "flex";
+}
+
+updateNotificationBadge();
+updateAdminButton();
+</script>
+</body>
+</html>
